@@ -9,3 +9,14 @@ from datetime import datetime
 
 video_bp = Blueprint("video", __name__, url_prefix="/videos")
 
+# Helper Functions
+def valid_int(number, parameter_type):
+    try:
+        int(number)
+    except:
+        abort(make_response({"error": f"{parameter_type} must be an int"}, 400))
+
+def get_vidoe_from_id(video_id):
+    valid_int(video_id, "video_id")
+    return Video.query.get_or_404(video_id, description="{video not found}")
+    
