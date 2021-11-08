@@ -68,5 +68,11 @@ def read_one_video(video_id):
 @video_bp.route("<video_id>", methods=["PUT"])
 def update_video(video_id):
     video = get_video_from_id(video_id)
-    request_body = request.get_json()
+    request_body = valid_request_body_inputs()
+    video.title=request_body["title"]
+    video.release_date=request_body["release_date"]
+    video.total_inventory=request_body["total_inventory"]
+    db.session.commit()
+    return make_response(video.to_dict(), 200)
+
 
