@@ -17,9 +17,14 @@ def valid_int(number, parameter_type):
     except:
         abort(make_response({"error": f"{parameter_type} must be an int"}, 400))
 
-def get_vidoe_from_id(video_id):
+def get_video_from_id(video_id):
     valid_int(video_id, "video_id")
-    return Video.query.get_or_404(video_id, description="{video not found}")
+    try:
+        video = Video.query.get(video_id)
+    except:
+        return None
+        # return make_response({"message": f"Video {video_id} was not found"}, 404)
+    return video
 
 
 # Routes
@@ -53,3 +58,8 @@ def read_all_videos():
             video.to_dict()
         )
     return make_response(jsonify(video_response), 200)
+
+@video_bp.route("/<video_id>", methods=["GET"])
+def read_one_video(video_id):
+    video = get_video_from_id(video_id)
+    return make_response(video.to_dict(), 200)
