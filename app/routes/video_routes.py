@@ -43,3 +43,13 @@ def create_video():
     db.session.commit()
 
     return make_response(new_video.to_dict(), 201)
+
+@video_bp.route("", methods=["GET"])
+def read_all_videos():
+    videos = Video.query.all()
+    video_response = []
+    for video in videos:
+        video_response.append(
+            video.to_dict()
+        )
+    return make_response(jsonify(video_response), 200)
