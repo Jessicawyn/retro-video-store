@@ -19,11 +19,9 @@ def valid_int(number, parameter_type):
 
 def get_video_from_id(video_id):
     valid_int(video_id, "video_id")
-    try:
-        video = Video.query.get(video_id)
-    except:
-        return None
-        # return make_response({"message": f"Video {video_id} was not found"}, 404)
+    video = Video.query.get(video_id)
+    if not video:        
+        abort(make_response({"message": f"Video {video_id} was not found"}, 404))
     return video
 
 
