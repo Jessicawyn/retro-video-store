@@ -75,4 +75,11 @@ def update_video(video_id):
     db.session.commit()
     return make_response(video.to_dict(), 200)
 
+@video_bp.route("/<video_id>", methods=["DELETE"])
+def delete_video(video_id):
+    video = get_video_from_id(video_id)
+    
+    db.session.delete(video)
+    db.session.commit()
 
+    return make_response(video.to_dict(), 200)
