@@ -13,7 +13,9 @@ video_bp = Blueprint("video", __name__, url_prefix="/videos")
 # Helper Functions
 def valid_int(number, parameter_type):
     try:
-        int(number)
+        if int(number) < 0:
+            abort(make_response({"error": f"{parameter_type} cannot be a negative int"}, 400))
+    
     except:
         abort(make_response({"error": f"{parameter_type} must be an int"}, 400))
 
@@ -32,6 +34,7 @@ def valid_request_body_inputs():
         abort(make_response({"details": "Request body must include release_date."}, 400))
     elif "total_inventory" not in request_body:
         abort(make_response({"details": "Request body must include total_inventory."}, 400))
+    valid_int(request_body["total_inventory"], "total_inventory")
     return request_body
 
 
