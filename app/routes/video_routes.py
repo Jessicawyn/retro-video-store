@@ -24,18 +24,21 @@ def get_video_from_id(video_id):
         abort(make_response({"message": f"Video {video_id} was not found"}, 404))
     return video
 
+def valid_request_body_inputs():
+    request_body = request.get_json()
+    if "title" not in request_body:
+        abort(make_response({"details": "Request body must include title."}, 400))
+    elif "release_date" not in request_body:
+        abort(make_response({"details": "Request body must include release_date."}, 400))
+    elif "total_inventory" not in request_body:
+        abort(make_response({"details": "Request body must include total_inventory."}, 400))
+    return request_body
+
 
 # Routes
 @video_bp.route("", methods=["POST"])
 def create_video():
-    request_body = request.get_json()
-    if "title" not in request_body:
-        return make_response({"details": "Request body must include title."}, 400)
-    elif "release_date" not in request_body:
-        return make_response({"details": "Request body must include release_date."}, 400)
-    elif "total_inventory" not in request_body:
-        return make_response({"details": "Request body must include total_inventory."}, 400)
-    
+    request_body = valid_request_body_inputs()
     new_video = Video(
         title=request_body["title"],
         release_date=request_body["release_date"],
@@ -61,3 +64,9 @@ def read_all_videos():
 def read_one_video(video_id):
     video = get_video_from_id(video_id)
     return make_response(video.to_dict(), 200)
+
+@video_bp.route("<video_id>", methods=["PUT"])
+def update_video(video_id):
+    video = get_video_from_id(video_id)
+    request_body = request.get_json()
+
