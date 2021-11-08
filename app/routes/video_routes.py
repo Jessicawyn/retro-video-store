@@ -26,8 +26,12 @@ def get_vidoe_from_id(video_id):
 @video_bp.route("", methods=["POST"])
 def create_video():
     request_body = request.get_json()
-    if "title" not in request_body or "release_date" not in request_body or "total_inventory" not in request_body:
-        return make_response({"detail": "Invalid data"}, 400)
+    if "title" not in request_body:
+        return make_response({"details": "Request body must include title."}, 400)
+    elif "release_date" not in request_body:
+        return make_response({"details": "Request body must include release_date."}, 400)
+    elif "total_inventory" not in request_body:
+        return make_response({"details": "Request body must include total_inventory."}, 400)
     
     new_video = Video(
         title=request_body["title"],
@@ -38,4 +42,4 @@ def create_video():
     db.session.add(new_video)
     db.session.commit()
 
-    return make_response({"video": new_video.to_dict()}, 201)
+    return make_response(new_video.to_dict(), 201)
