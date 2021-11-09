@@ -44,6 +44,9 @@ def create_rental():
     db.session.add(new_rental)
     db.session.commit()
 
+    
+
+
     #     {
     # "customer_id": 122581016,
     # "video_id": 235040983,
@@ -52,4 +55,4 @@ def create_rental():
     # "available_inventory": 5
     # }
     
-    return make_response("NEW RESPONSE HERE", 201)
+    return make_response({"checked_out": customer_checked_out_list}, 201)
