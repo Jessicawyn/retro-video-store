@@ -41,7 +41,7 @@ def create_rental():
         due_date = datetime.utcnow() + timedelta(7)
     )
 
-    db.seesion.add(new_rental)
+    db.session.add(new_rental)
     db.session.commit()
 
     #     {
@@ -52,3 +52,4 @@ def create_rental():
     # "available_inventory": 5
     # }
     
+    return make_response("NEW RESPONSE HERE", 201)
