@@ -39,5 +39,7 @@ def create_app(test_config=None):
     from .routes.video_routes import video_bp
     app.register_blueprint(video_bp)
 
+    from .routes.rental_routes import rental_bp
+    app.register_blueprint(rental_bp)
 
     return app
