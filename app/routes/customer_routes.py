@@ -59,6 +59,7 @@ def create_customer():
         name=request_body["name"],
         postal_code=request_body["postal_code"],
         phone=request_body["phone"],
+        registered_at = datetime.utcnow()
         )
 
     db.session.add(new_customer)
