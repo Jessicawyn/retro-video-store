@@ -98,51 +98,28 @@ def create_check_in():
     video_id_please = request_body["video_id"]
     customer_id = request_body["customer_id"]
 
-    # Check for video and customer in rentals
-    # TODO: Create Helper Function For List loops
+    # Check customer exists in Customer
     check_customer = Customer.query.get(customer_id) 
-    # customer_rentals_list = []
-    # for customer in check_customer:
-    #     customer_rentals_list.append(customer)
-
     if not check_customer:
         return make_response({"message": f"No rentals for customer {customer_id}."}, 404)
-    # customer_rentals = Rental.query.filter(Rental.customer_id == request_body["customer_id"]) 
-    # customer_rentals_list = []
-    # for customer in customer_rentals:
-    #     customer_rentals_list.append(customer)
-
-    # if len(customer_rentals_list) == 0 :
-    #     return make_response({"message": f"No rentals for customer {customer_id}."}, 404)
-    check_video = Video.query.get(video_id_please)
-    # video_rentalsx_list = []
-    # for video in check_video:
-        # video_rentals_list.append(video)
     
+    # Check video exists in Video
+    check_video = Video.query.get(video_id_please)    
     if not check_video:
         return make_response({"message": f"No rentals for the video {video_id_please}."}, 404)
-
     
-    # video_rentals = Rental.query.filter(Rental.video_id == video_id_please)
-    # video_rentals_list = []
-    # for video in video_rentals:
-    #     video_rentals_list.append(video)
-    
-    # if len(video_rentals_list) == 0:
-    #     return make_response({"message": f"No rentals for the video {video_id_please}."}, 404)
-    
-    # Checkin Video not checked out
-    video_by_customer = Rental.query.filter(
+    # Check video is checked out by customer before checkin
+    rentals_by_customer_and_video = Rental.query.filter(
         Rental.video_id == video_id_please,
         Rental.customer_id == customer_id,
         Rental.checked_in.is_(None)
         )
     
-    video_by_customer_list = []
-    for rentals in video_by_customer:
-        video_by_customer_list.append(rentals)
+    rental_list = []
+    for rentals in rentals_by_customer_and_video:
+        rental_list.append(rentals)
 
-    if len(video_by_customer_list) == 0:
+    if len(rental_list) == 0:
         return make_response({"message": f"No outstanding rentals for customer {customer_id} and video {video_id_please}"}, 400)
     
 
