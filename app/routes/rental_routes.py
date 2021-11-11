@@ -17,11 +17,11 @@ def valid_int(number, parameter_type):
     except:
         abort(make_response({"error": f"{parameter_type} must be an int"}, 400))
 
-def get_rental_from_id(rental_id):
-    valid_int(rental_id, "rental_id")
-    rental = Rental.query.get(rental_id)
+def get_id(id, model):
+    valid_int(id, "id")
+    rental = model.query.get(id)
     if not rental:        
-        abort(make_response({"message": f"Rental {rental_id} was not found"}, 404))
+        abort(make_response({"message": f"Rental {id} was not found"}, 404))
     return rental
 
 
@@ -29,11 +29,15 @@ def get_rental_from_id(rental_id):
 
 @rental_bp.route("/check-out", methods=["POST"])
 def create_rental():
+    
     request_body = request.get_json()
     if "customer_id" not in request_body:
         abort(make_response({"details": "Request body must include customer_id."}, 400))
     elif "video_id" not in request_body:
         abort(make_response({"details": "Request body must include video_id."}, 400))
+    
+    get_id(request_body["customer_id"],Customer)
+    get_id(request_body["video_id"], Video)
 
     new_rental = Rental(
         customer_id = request_body["customer_id"],
@@ -41,15 +45,34 @@ def create_rental():
         due_date = datetime.utcnow() + timedelta(7)
     )
 
+
     db.session.add(new_rental)
     db.session.commit()
 
-    #     {
-    # "customer_id": 122581016,
-    # "video_id": 235040983,
-    # "due_date": "2020-06-31",
-    # "videos_checked_out_count": 2,
-    # "available_inventory": 5
-    # }
     
-    return make_response("NEW RESPONSE HERE", 201)
+    # rentals_checked_out_by_customer = Rental.query.filter_by(customer_id=request_body["customer_id"]).all() 
+    # print(f"rentals_checked_out_by_customer{rentals_checked_out_by_customer}")
+    # rentals_with_the_video = Rental.query.filter_by(video_id=request_body["video_id"]).all() 
+    # available_videos = [video for video in rentals_with_the_video if video.checked_in == None]
+
+    # rentals_with_the_video = Rental.query.filter(
+    
+    # avilable_inventory = new_rental.get_available_inventory()
+    # print(avilable_inventory )
+    # if   avilable_inventory  < 0:
+    #     print("abort")
+    #     abort(make_response({"message": "Could not perfom checkout."}, 404))
+        
+    
+    # print("******")
+    
+    # print(new_rental.to_dict())
+    return make_response(new_rental.to_dict(),200)
+
+   
+
+
+
+#LIST THE VIDEOS A CUSTOMER CURRENTLY HAS CHECKED OUT
+# @rental_bp.route("/<customer_id>/rentals", methods=["GET"])
+# def get_rentals():
