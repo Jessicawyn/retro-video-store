@@ -25,8 +25,6 @@ def get_id(id, model):
     return rental
 
 
-
-
     
 #POST/RENTALS/CHECK-OUT
 
@@ -77,7 +75,6 @@ def create_check_in(): # TODO: Make this a helper function as it's called in bot
         if parameter not in request_body:
             abort(make_response({"details": f"Request body must include {parameter}."}, 400))
 
-
     video_id = request_body["video_id"]
     customer_id = request_body["customer_id"]
 
@@ -102,40 +99,9 @@ def create_check_in(): # TODO: Make this a helper function as it's called in bot
         return make_response({"message": f"No outstanding rentals for customer {customer_id} and video {video_id}"}, 400)
     
     # Checkin Rental: Add checked_in date and update database
-    rental_to_check_in.checked_in == datetime.utcnow()
+    rental_to_check_in.checked_in = datetime.utcnow()
 
     db.session.commit()
 
-    # rental_to_check_in.
-
     # Return rental information
-
-    return make_response(rental_to_check_in.to_dict(),200)
-    # return make_response("RTURN ",200)
-    #     )
-    # # total_inventory = video["total_inventory"] filter(myModel.border.is_(None))
-    # checked_out = Rental.query.filter(Rental.video_id == video_id, Rental.checked_in.border.is_(None))
-    # checked_out = Rental.query.filter(Rental.checked_in.border.is_(None))
-    # checked_in = Rental.query.filter(Rental.checked_in.isnot(None))
-    # checked_out = Rental.query.filter(Rental.video_id == video_id, Rental.checked_in.is_(None))
-    # # Rental.checked_in.is_(None), Rental.video_id == video_id))
-    # working = Rental.query.filter(Rental.video_id == video_id)
-
-
-    
-
-    # return make_response("", 200)
-    # response_body = {
-    #     "customer_id": customer_id,
-    #     "video_id": video_id,
-    #     "videos_checked_out_count": customer_video_checkout_count(customer_id),
-    #     "available_inventory": get_available_inventory(video_id)
-    #     }
-    # return make_response(jsonify(working_list), 200)
-    # return make_response(f"rental id hello", 200)
-
-
-# len(video.rentals) video.rentals - list of all rentals with that video id
-#                                     rental objects
-
-# rental.video 
+    return make_response(rental_to_check_in.to_dict(), 200)
