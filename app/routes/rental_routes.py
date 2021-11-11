@@ -69,8 +69,6 @@ def create_rental():
     # print(new_rental.to_dict())
     return make_response(new_rental.to_dict(),200)
 
-   
-
 
 
 #LIST THE VIDEOS A CUSTOMER CURRENTLY HAS CHECKED OUT
