@@ -25,16 +25,20 @@ def get_id(id, model):
     return rental
 
 
+
+
+    
 #POST/RENTALS/CHECK-OUT
 
 @rental_bp.route("/check-out", methods=["POST"])
 def create_rental():
-    
+
     request_body = request.get_json()
-    if "customer_id" not in request_body:
-        abort(make_response({"details": "Request body must include customer_id."}, 400))
-    elif "video_id" not in request_body:
-        abort(make_response({"details": "Request body must include video_id."}, 400))
+    request_body_parameters = ["customer_id", "video_id"]
+    for parameter in request_body_parameters:
+        if parameter not in request_body:
+            abort(make_response({"details": f"Request body must include {parameter}."}, 400))
+
     
     get_id(request_body["customer_id"],Customer)
     get_id(request_body["video_id"], Video)
@@ -50,23 +54,12 @@ def create_rental():
     db.session.commit()
 
     
-    # rentals_checked_out_by_customer = Rental.query.filter_by(customer_id=request_body["customer_id"]).all() 
-    # print(f"rentals_checked_out_by_customer{rentals_checked_out_by_customer}")
-    # rentals_with_the_video = Rental.query.filter_by(video_id=request_body["video_id"]).all() 
-    # available_videos = [video for video in rentals_with_the_video if video.checked_in == None]
+    avilable_inventory = new_rental.get_available_inventory()
+    print(avilable_inventory )
+    if   avilable_inventory  < 0:
+        print("abort")
+        abort(make_response({"message": "Could not perform checkout."}, 400))
 
-    # rentals_with_the_video = Rental.query.filter(
-    
-    # avilable_inventory = new_rental.get_available_inventory()
-    # print(avilable_inventory )
-    # if   avilable_inventory  < 0:
-    #     print("abort")
-    #     abort(make_response({"message": "Could not perfom checkout."}, 404))
-        
-    
-    # print("******")
-    
-    # print(new_rental.to_dict())
     return make_response(new_rental.to_dict(),200)
 
 

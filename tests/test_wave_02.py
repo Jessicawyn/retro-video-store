@@ -70,7 +70,7 @@ def test_checkout_video_no_inventory(client, one_checked_out_video):
     response_body = response.get_json()
 
     assert response.status_code == 400
-    assert response_body["message"] == "Could not perform checkout"
+    assert response_body["message"] == "Could not perform checkout."
 
 def test_checkin_video(client, one_checked_out_video):
     response = client.post("/rentals/check-in", json={
