@@ -16,22 +16,26 @@ customer_bp = Blueprint("customer", __name__, url_prefix="/customers")
 def read_all_customers():
 
     sort_query = request.args.get("sort")
+    page = request.args.get('p', 1, type=int)
+    per_page = request.args.get('n', 20, type=int)
 
     if sort_query == "name":
-        customers = Customer.query.order_by(Customer.name.asc())
+        customers = Customer.query.order_by(Customer.name.asc()).paginate(page=page, per_page=per_page)
     elif sort_query == "registered_at":
-        customers = Customer.query.order_by(Customer.registered_at.asc())
+        customers = Customer.query.order_by(Customer.registered_at.asc()).paginate(page=page, per_page=per_page)
     elif sort_query == "postal_code":
-        customers = Customer.query.order_by(Customer.postal_code.asc())
+        customers = Customer.query.order_by(Customer.postal_code.asc()).paginate(page=page, per_page=per_page)
     else:
-        customers = Customer.query.all()
+        customers = Customer.query.all().paginate(page=page, per_page=per_page)
 
+    
     customer_response = []
     for customer in customers:
         customer_response.append(
             customer.to_dict()
             )
 
+    customer_response = 
     return jsonify(customer_response)
     
 
