@@ -14,7 +14,27 @@ customer_bp = Blueprint("customer", __name__, url_prefix="/customers")
 #ROUTES
 @customer_bp.route("", methods=["GET"])
 def read_all_customers():
-    customer_response = read_all(Customer)
+
+    name_query = request.args.get("name")
+    registered_at_query = request.args.get("registered_at")
+    postal_code_query = request.args.get("postal_code")
+    sort_query = request.args.get("sort")
+
+    if name_query:
+        customers = Customer.query.filter_by(name=name_query)
+    elif registered_at_query:
+        customers = Customer.query.filter_by(registered_at=registered_at_query)
+    elif postal_code_query:
+        customers = Customer.query.filter_by(postal_code=postal_code_query)
+    else:
+        customers = Customer.query.all()
+
+        customer_response = []
+        for customer in customers:
+            customer_response.append(
+                customer.to_dict()
+            )
+        # customer_response = read_all(Customer)
     return jsonify(customer_response)
    
 
@@ -57,15 +77,16 @@ def update_customer(customer_id):
     for parameter in request_parameters:
         if parameter  not in request_body:
             return make_response({"message": "Invalid data" }, 400)
+
         else:
-            customer.parameter = request_body[parameter]
-    
-    # if "name"  not in request_body or "postal_code" not in request_body or "phone" not in request_body:
-    #     return make_response({"message": "Invalid data" }, 400)
-    # else:
-    #     customer.name = request_body["name"]
-    #     customer.postal_code = request_body["postal_code"]
-    #     customer.phone = request_body["phone"]
+            customer.name = request_body["name"]
+            customer.postal_code = request_body["postal_code"]
+            customer.phone = request_body["phone"]
+
+        # else:
+        #     customer.parameter = request_body[parameter]
+
+   
  
     
     db.session.commit()
@@ -80,14 +101,6 @@ def delete_customer(customer_id):
     db.session.delete(customer)
     db.session.commit()
     return make_response({"id":int(customer_id)}, 200)
-
-
-# LIST VIDEOS CUSTOMER HAS CHECKED OUT
-# @customer_bp.route("/<customer_id>/rentals")
-# def customer_current_check_outs(customer_id):
-#     customer = get_customer_from_id(customer_id)
-#     checked_out_list = [rental.movie_list_to_dict() for rental in customer.rentals if rental.customer_id == customer.id and rental.checked_in == None]
-#     return make_response(jsonify(checked_out_list), 200)
     
 
 #LIST THE VIDEOS A CUSTOMER CURRENTLY HAS CHECKED OUT

@@ -37,9 +37,4 @@ class Rental(db.Model):
             "postal_code": self.customer.postal_code          
         }
     
-    # def movie_list_to_dict(self):
-    #     return {
-    #         "release_date": self.video.release_date,
-    #         "title": self.video.title,
-    #         "due_date": self.due_date
-    #     }
+  
