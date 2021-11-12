@@ -17,7 +17,7 @@ def read_all_customers():
 
     sort_query = request.args.get("sort")
     page = request.args.get('p', 1, type=int)
-    per_page = request.args.get('n', 20, type=int)
+    per_page = request.args.get('n', 2, type=int)
 
     if sort_query == "name":
         customers = Customer.query.order_by(Customer.name.asc()).paginate(page=page, per_page=per_page)
@@ -35,9 +35,8 @@ def read_all_customers():
             customer.to_dict()
             )
 
-    customer_response = 
     return jsonify(customer_response)
-    
+
 
 #GET ONE CUSTOMER WITH ID
 @customer_bp.route("/<customer_id>", methods=["GET"])

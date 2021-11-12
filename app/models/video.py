@@ -15,4 +15,14 @@ class Video(db.Model):
             "total_inventory": self.total_inventory
         }
 
-        
+    def to_dict_with_rentals(self):
+        result = []
+        for rental in self.rentals:
+            if rental.checked_in == None:
+                result.append({
+                    "due_date": rental.due_date,
+                    "name": rental.customer.name,
+                    "phone": rental.customer.phone,
+                    "postal_code": rental.customer.postal_code 
+                })
+        return result

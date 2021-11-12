@@ -73,5 +73,4 @@ def delete_video(video_id):
 @video_bp.route("/<video_id>/rentals", methods=["GET"])
 def get_rental_customers_by_video(video_id):
     video = get_id(video_id, Video, str_repr="Video")
-    rental_list = [rental.customer_list_to_dict() for rental in video.rentals if rental.video_id == video.id and rental.checked_in == None]
-    return make_response(jsonify(rental_list), 200)
+    return make_response(jsonify(video.to_dict_with_rentals()), 200)
