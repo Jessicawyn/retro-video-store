@@ -15,24 +15,24 @@ customer_bp = Blueprint("customer", __name__, url_prefix="/customers")
 @customer_bp.route("", methods=["GET"])
 def read_all_customers():
 
-    name_query = request.args.get("name")
-    registered_at_query = request.args.get("registered_at")
-    postal_code_query = request.args.get("postal_code")
+    # name_query = request.args.get("name")
+    # registered_at_query = request.args.get("registered_at")
+    # postal_code_query = request.args.get("postal_code")
     sort_query = request.args.get("sort")
 
-    if name_query:
-        customers = Customer.query.filter_by(name=name_query)
-    elif registered_at_query:
-        customers = Customer.query.filter_by(registered_at=registered_at_query)
-    elif postal_code_query:
-        customers = Customer.query.filter_by(postal_code=postal_code_query)
+    if sort_query == "name":
+        customers = Customer.query.order_by(Customer.name.asc())
+    elif sort_query == "registered_at":
+        customers = Customer.query.order_by(Customer.registered_at.asc())
+    elif sort_query == "postal_code":
+        customers = Customer.query.order_by(Customer.postal_code.asc())
     else:
         customers = Customer.query.all()
 
-        customer_response = []
-        for customer in customers:
-            customer_response.append(
-                customer.to_dict()
+    customer_response = []
+    for customer in customers:
+        customer_response.append(
+            customer.to_dict()
             )
         # customer_response = read_all(Customer)
     return jsonify(customer_response)
