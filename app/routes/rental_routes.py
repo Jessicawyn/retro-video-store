@@ -55,7 +55,7 @@ def create_rental():
 
     
     avilable_inventory = new_rental.get_available_inventory()
-    print(avilable_inventory )
+   
     if   avilable_inventory  < 0:
         print("abort")
         abort(make_response({"message": "Could not perform checkout."}, 400))
@@ -64,6 +64,3 @@ def create_rental():
 
 
 
-#LIST THE VIDEOS A CUSTOMER CURRENTLY HAS CHECKED OUT
-# @rental_bp.route("/<customer_id>/rentals", methods=["GET"])
-# def get_rentals():

@@ -15,12 +15,17 @@ class Rental(db.Model):
     def get_available_inventory(self):
         return self.video.total_inventory - len([rental for rental in self.video.rentals if rental.checked_in == None])
 
+    def get_videos_checked_out(self):
+        return len([rental for rental in self.customer.rentals if rental.checked_in == None])
+
     def to_dict(self):
         result = {
                 "customer_id": self.customer_id,
                 "video_id": self.video_id,
                 "due_date": self.due_date,
-                "videos_checked_out_count": len([rental for rental in self.customer.rentals if rental.checked_in == None]),
+                "videos_checked_out_count": self.get_videos_checked_out(),
                 "available_inventory": self.get_available_inventory(),
         }
         return result
+
+    

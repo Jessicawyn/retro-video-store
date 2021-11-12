@@ -158,10 +158,11 @@ def test_rentals_by_customer(client, one_checked_out_video):
     response = client.get("/customers/1/rentals")
 
     response_body = response.get_json()
-
+    print(f"response_body{response_body}")
     response.status_code == 200
     len(response_body) == 1
     response_body[0]["title"] == VIDEO_TITLE
+    
 
 def test_rentals_by_customer_not_found(client):
     response = client.get("/customers/1/rentals")

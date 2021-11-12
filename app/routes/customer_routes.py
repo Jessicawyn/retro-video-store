@@ -98,6 +98,11 @@ def delete_customer(customer_id):
 
     
 
+#LIST THE VIDEOS A CUSTOMER CURRENTLY HAS CHECKED OUT
+@customer_bp.route("/<customer_id>/rentals", methods=["GET"])
+def get_rentals(customer_id):
+    get_customer_from_id(customer_id)
+    customer = get_customer_from_id(customer_id)
 
-
+    return make_response(jsonify(customer.to_dict_with_rentals()), 200)
 

@@ -18,3 +18,16 @@ class Customer(db.Model):
             "phone": self.phone,
             "registered_at": self.registered_at
         }
+
+
+
+    def to_dict_with_rentals(self):
+        result = []
+        for rental in self.rentals:
+            if rental.checked_in == None:
+                result.append( {
+                    "release_date": rental.video.release_date,
+                    "title": rental.video.title,
+                    "due_date": rental.due_date
+                })
+        return result 
