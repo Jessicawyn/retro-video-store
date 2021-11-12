@@ -54,19 +54,14 @@ def create_check_in():
     request_body_parameters = ["customer_id", "video_id"]
     chek_request_body(request_body_parameters)
     
-
     video_id = request_body["video_id"]
     customer_id = request_body["customer_id"]
 
     # Check customer exists in Customer
-    check_customer = Customer.query.get(customer_id) 
-    if not check_customer:
-        return make_response({"message": f"No rentals for customer {customer_id}."}, 404)
+    check_customer = get_id(customer_id, Customer, "customer")
     
     # Check video exists in Video
-    check_video = Video.query.get(video_id)    
-    if not check_video:
-        return make_response({"message": f"No rentals for the video {video_id}."}, 404)
+    check_video = get_id(video_id, Video, "video")
     
     # Get rental to check in and ensure it is checked out
     rental_to_check_in = Rental.query.filter(
