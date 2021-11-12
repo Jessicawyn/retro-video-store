@@ -15,9 +15,6 @@ customer_bp = Blueprint("customer", __name__, url_prefix="/customers")
 @customer_bp.route("", methods=["GET"])
 def read_all_customers():
 
-    # name_query = request.args.get("name")
-    # registered_at_query = request.args.get("registered_at")
-    # postal_code_query = request.args.get("postal_code")
     sort_query = request.args.get("sort")
 
     if sort_query == "name":
@@ -34,9 +31,9 @@ def read_all_customers():
         customer_response.append(
             customer.to_dict()
             )
-        # customer_response = read_all(Customer)
+
     return jsonify(customer_response)
-   
+    
 
 #GET ONE CUSTOMER WITH ID
 @customer_bp.route("/<customer_id>", methods=["GET"])
