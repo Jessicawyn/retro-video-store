@@ -1,5 +1,6 @@
 from app import db
 from app.models.customer import Customer
+from app.models.rental import Rental
 from flask import Blueprint, json, jsonify, make_response, request, abort
 from datetime import datetime
 
@@ -96,6 +97,13 @@ def delete_customer(customer_id):
     db.session.commit()
     return make_response({"id":int(customer_id)}, 200)
 
+
+# LIST VIDEOS CUSTOMER HAS CHECKED OUT
+# @customer_bp.route("/<customer_id>/rentals")
+# def customer_current_check_outs(customer_id):
+#     customer = get_customer_from_id(customer_id)
+#     checked_out_list = [rental.movie_list_to_dict() for rental in customer.rentals if rental.customer_id == customer.id and rental.checked_in == None]
+#     return make_response(jsonify(checked_out_list), 200)
     
 
 #LIST THE VIDEOS A CUSTOMER CURRENTLY HAS CHECKED OUT

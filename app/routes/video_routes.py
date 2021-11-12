@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, make_response, request, abort
 from flask.helpers import make_response
 from app.models.video import Video
+from app.models.rental import Rental
 from app import db
 from datetime import datetime
 
@@ -82,3 +83,9 @@ def delete_video(video_id):
     db.session.commit()
 
     return make_response(video.to_dict(), 200)
+
+@video_bp.route("/<video_id>/rentals", methods=["GET"])
+def get_rental_customers_by_video(video_id):
+    video = get_video_from_id(video_id)
+    rental_list = [rental.customer_list_to_dict() for rental in video.rentals if rental.video_id == video.id and rental.checked_in == None]
+    return make_response(jsonify(rental_list), 200)

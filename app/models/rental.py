@@ -29,3 +29,17 @@ class Rental(db.Model):
         return result
 
     
+    def customer_list_to_dict(self):
+        return {
+            "due_date": self.due_date,
+            "name": self.customer.name,
+            "phone": self.customer.phone,
+            "postal_code": self.customer.postal_code          
+        }
+    
+    # def movie_list_to_dict(self):
+    #     return {
+    #         "release_date": self.video.release_date,
+    #         "title": self.video.title,
+    #         "due_date": self.due_date
+    #     }
