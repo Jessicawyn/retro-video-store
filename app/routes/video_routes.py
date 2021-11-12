@@ -4,24 +4,12 @@ from app.models.video import Video
 from app.models.rental import Rental
 from app import db
 from datetime import datetime
+from app.common_functions.check_for_id import valid_int, get_id
+from app.common_functions.read_all import read_all
 
 video_bp = Blueprint("video", __name__, url_prefix="/videos")
 
 # Helper Functions
-def valid_int(number, parameter_type):
-    try:
-        if int(number) < 0:
-            abort(make_response({"error": f"{parameter_type} cannot be a negative int"}, 400))
-    
-    except:
-        abort(make_response({"error": f"{parameter_type} must be an int"}, 400))
-
-def get_video_from_id(video_id):
-    valid_int(video_id, "video_id")
-    video = Video.query.get(video_id)
-    if not video:        
-        abort(make_response({"message": f"Video {video_id} was not found"}, 404))
-    return video
 
 def valid_request_body_inputs():
     request_body = request.get_json()
@@ -52,22 +40,20 @@ def create_video():
 
 @video_bp.route("", methods=["GET"])
 def read_all_videos():
-    videos = Video.query.all()
-    video_response = []
-    for video in videos:
-        video_response.append(
-            video.to_dict()
-        )
+    video_response = read_all(Video)
+    
     return make_response(jsonify(video_response), 200)
+
 
 @video_bp.route("/<video_id>", methods=["GET"])
 def read_one_video(video_id):
-    video = get_video_from_id(video_id)
+    video = get_id(video_id, Video, str_repr="Video")
     return make_response(video.to_dict(), 200)
 
 @video_bp.route("<video_id>", methods=["PUT"])
 def update_video(video_id):
-    video = get_video_from_id(video_id)
+    video = get_id(video_id, Video, str_repr="Video")
+    
     request_body = valid_request_body_inputs()
     video.title=request_body["title"]
     video.release_date=request_body["release_date"]
@@ -77,7 +63,7 @@ def update_video(video_id):
 
 @video_bp.route("/<video_id>", methods=["DELETE"])
 def delete_video(video_id):
-    video = get_video_from_id(video_id)
+    video = get_id(video_id, Video, str_repr="Video")
     
     db.session.delete(video)
     db.session.commit()
@@ -86,6 +72,6 @@ def delete_video(video_id):
 
 @video_bp.route("/<video_id>/rentals", methods=["GET"])
 def get_rental_customers_by_video(video_id):
-    video = get_video_from_id(video_id)
+    video = get_id(video_id, Video, str_repr="Video")
     rental_list = [rental.customer_list_to_dict() for rental in video.rentals if rental.video_id == video.id and rental.checked_in == None]
     return make_response(jsonify(rental_list), 200)
