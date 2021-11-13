@@ -43,18 +43,20 @@ def create_video():
 def read_all_videos():
 
     sort_query = request.args.get("sort")
-    if sort_query not in VIDEO_VALID_SORTS:
-        return make_response({"error": "please provide a valid sort parameter"}, 400)
+    page = request.args.get('p', 1, type=int)
+    per_page = request.args.get('n', 10, type=int)
     
     if sort_query == "title":
-        videos = Video.query.order_by(Video.title.asc())
+        videos = Video.query.order_by(Video.title.asc()).paginate(page=page, per_page=per_page)
     elif sort_query == "release_date":
-        videos = Video.query.order_by(Video.release_date.asc())
+        videos = Video.query.order_by(Video.release_date.asc()).paginate(page=page, per_page=per_page)
     else:
-        videos = Video.query.all()
+        videos = Video.query.order_by(Video.id.asc()).paginate(page=page, per_page=per_page)
+    
+    paginated_videos = videos.items
 
     video_response = []
-    for video in videos:
+    for video in paginated_videos:
         video_response.append(
             video.to_dict()
         )
