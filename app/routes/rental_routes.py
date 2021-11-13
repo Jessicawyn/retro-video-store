@@ -10,6 +10,7 @@ from app.common_functions.check_request_body import chek_request_body
 
 rental_bp = Blueprint("rental", __name__, url_prefix="/rentals")
 
+OVERDUE_VALID_SORTS = ["title", "name", "checkout_date", "due_date"]
 # Helper Functions
 
     
@@ -80,3 +81,37 @@ def create_check_in():
 
     # Return rental information
     return make_response(rental_to_check_in.to_dict(), 200)
+
+@rental_bp.route("/overdue", methods=["GET"])
+def get_overdue_rentals():
+    sort_query = request.args.get("sort")
+    page = request.args.get('p', 1, type=int)
+    per_page = request.args.get('n', 10, type=int)
+    
+    if sort_query and sort_query not in OVERDUE_VALID_SORTS:
+        return make_response({"error": "Please enter a valid sort parameter."})
+    #     ["title", "name", "checkout_date", "due_date"]
+    if sort_query == "checkout_date" or sort_query == "due_date":
+        overdue = Rental.query.filter(Rental.checked_in.is_(None), Rental.due_date < datetime.utcnow()).order_by(Rental.due_date.asc()).paginate(page=page, per_page=per_page)
+    # elif sort_query == "title":
+    #     overdue = Rental.query.filter(Rental.checked_in.is_(None), Rental.due_date < datetime.utcnow()).order_by(Video.title.asc()).paginate(page=page, per_page=per_page)
+    # elif sort_query == "name":
+    #     overdue = Rental.query.filter(Rental.checked_in.is_(None), Rental.due_date < datetime.utcnow()).order_by(Customer.name.asc()).paginate(page=page, per_page=per_page)
+    else:
+        overdue = Rental.query.filter(Rental.checked_in.is_(None), Rental.due_date < datetime.utcnow()).order_by(Rental.id.asc()).paginate(page=page, per_page=per_page)
+    # paginated_videos = videos.items
+
+    # overdue = Rental.query.filter(
+    #     Rental.checked_in.is_(None),
+    #     Rental.due_date < datetime.utcnow()
+    #     ).paginate(page=page, per_page=per_page)
+    paginated_overdue = overdue.items
+    overdue_response = []
+    for rental in paginated_overdue:
+        overdue_response.append(
+            rental.overdue_to_dict()
+        )
+
+
+
+    return make_response(jsonify(overdue_response), 200)

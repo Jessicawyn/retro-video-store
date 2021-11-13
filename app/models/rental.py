@@ -1,6 +1,7 @@
 from app import db
 from app.models.video import Video
 from app.models.customer import Customer
+from datetime import timedelta
 
 class Rental(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,6 +28,19 @@ class Rental(db.Model):
                 "available_inventory": self.get_available_inventory(),
         }
         return result
-
     
+    def overdue_to_dict(self):
+        result = {
+            "video_id": self.video_id,
+            # "title": video.title,
+            "customer_id": self.customer_id,
+            # "name": self.customer.name,
+            # "postal_code": Customer.postal_code,
+            "checkout_date": self.due_date - timedelta(7),
+            "due_date": self.due_date
+        }
+        
+        return result
+
+
   

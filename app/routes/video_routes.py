@@ -45,7 +45,10 @@ def read_all_videos():
     sort_query = request.args.get("sort")
     page = request.args.get('p', 1, type=int)
     per_page = request.args.get('n', 10, type=int)
-    
+
+    if sort_query and sort_query not in VIDEO_VALID_SORTS:
+        return make_response({"error": "Please enter a valid sort parameter."})
+        
     if sort_query == "title":
         videos = Video.query.order_by(Video.title.asc()).paginate(page=page, per_page=per_page)
     elif sort_query == "release_date":
