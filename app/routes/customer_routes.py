@@ -17,16 +17,7 @@ def read_all_customers():
 
     sort_query = request.args.get("sort")
     page = request.args.get('p', 1, type=int)
-    per_page = request.args.get('n', 2, type=int)
-
-    # if sort_query == "name":
-    #     customers = Customer.query.order_by(Customer.name.asc())
-    # elif sort_query == "registered_at":
-    #     customers = Customer.query.order_by(Customer.registered_at.asc())
-    # elif sort_query == "postal_code":
-    #     customers = Customer.query.order_by(Customer.postal_code.asc())
-    # else:
-    #     customers = Customer.query.all()
+    per_page = request.args.get('n', 10, type=int)
 
     if sort_query == "name":
         customers = Customer.query.order_by(Customer.name.asc()).paginate(page=page, per_page=per_page)
@@ -35,11 +26,12 @@ def read_all_customers():
     elif sort_query == "postal_code":
         customers = Customer.query.order_by(Customer.postal_code.asc()).paginate(page=page, per_page=per_page)
     else:
-        customers = Customer.query.all().paginate(page=page, per_page=per_page)
-
+        customers = Customer.query.order_by(Customer.id.asc()).paginate(page=page, per_page=per_page)
     
+    paginated_customers = customers.items
+
     customer_response = []
-    for customer in customers:
+    for customer in paginated_customers:
         customer_response.append(
             customer.to_dict()
             )
