@@ -26,3 +26,4 @@ class Video(db.Model):
                     "postal_code": rental.customer.postal_code 
                 })
         return result
+

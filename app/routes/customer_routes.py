@@ -19,6 +19,15 @@ def read_all_customers():
     page = request.args.get('p', 1, type=int)
     per_page = request.args.get('n', 2, type=int)
 
+    # if sort_query == "name":
+    #     customers = Customer.query.order_by(Customer.name.asc())
+    # elif sort_query == "registered_at":
+    #     customers = Customer.query.order_by(Customer.registered_at.asc())
+    # elif sort_query == "postal_code":
+    #     customers = Customer.query.order_by(Customer.postal_code.asc())
+    # else:
+    #     customers = Customer.query.all()
+
     if sort_query == "name":
         customers = Customer.query.order_by(Customer.name.asc()).paginate(page=page, per_page=per_page)
     elif sort_query == "registered_at":

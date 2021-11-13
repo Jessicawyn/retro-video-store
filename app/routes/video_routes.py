@@ -8,6 +8,7 @@ from app.common_functions.check_for_id import valid_int, get_id
 from app.common_functions.read_all import read_all
 
 video_bp = Blueprint("video", __name__, url_prefix="/videos")
+VIDEO_VALID_SORTS = ['title', 'release_date']
 
 # Helper Functions
 
@@ -40,8 +41,24 @@ def create_video():
 
 @video_bp.route("", methods=["GET"])
 def read_all_videos():
-    video_response = read_all(Video)
+
+    sort_query = request.args.get("sort")
+    if sort_query not in VIDEO_VALID_SORTS:
+        return make_response({"error": "please provide a valid sort parameter"}, 400)
     
+    if sort_query == "title":
+        videos = Video.query.order_by(Video.title.asc())
+    elif sort_query == "release_date":
+        videos = Video.query.order_by(Video.release_date.asc())
+    else:
+        videos = Video.query.all()
+
+    video_response = []
+    for video in videos:
+        video_response.append(
+            video.to_dict()
+        )
+
     return make_response(jsonify(video_response), 200)
 
 
