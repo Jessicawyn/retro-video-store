@@ -32,10 +32,10 @@ class Rental(db.Model):
     def overdue_to_dict(self):
         result = {
             "video_id": self.video_id,
-            # "title": video.title,
+            "title": self.video.title,
             "customer_id": self.customer_id,
-            # "name": self.customer.name,
-            # "postal_code": Customer.postal_code,
+            "name": self.customer.name,
+            "postal_code": self.customer.postal_code,
             "checkout_date": self.due_date - timedelta(7),
             "due_date": self.due_date
         }
