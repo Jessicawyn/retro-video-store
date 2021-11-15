@@ -11,19 +11,6 @@ from app.common_functions.check_request_body import chek_request_body
 video_bp = Blueprint("video", __name__, url_prefix="/videos")
 VIDEO_VALID_SORTS = ['title', 'release_date']
 
-# Helper Functions
-
-# def valid_request_body_inputs():
-#     request_body = request.get_json()
-#     if "title" not in request_body:
-#         abort(make_response({"details": "Request body must include title."}, 400))
-#     elif "release_date" not in request_body:
-#         abort(make_response({"details": "Request body must include release_date."}, 400))
-#     elif "total_inventory" not in request_body:
-#         abort(make_response({"details": "Request body must include total_inventory."}, 400))
-#     valid_int(request_body["total_inventory"], "total_inventory")
-#     return request_body
-
 
 # Routes
 @video_bp.route("", methods=["POST"])

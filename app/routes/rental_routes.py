@@ -68,7 +68,6 @@ def create_check_in():
     rental_to_check_in.checked_in = datetime.utcnow()
 
     db.session.commit()
-
     
     return make_response(rental_to_check_in.to_dict(), 200)
 
