@@ -35,7 +35,6 @@ def read_all_customers():
             customer.to_dict()
             )
 
-    customer_response = 
     return jsonify(customer_response)
     
 
